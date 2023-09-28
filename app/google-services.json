@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "27276587687",
+    "project_id": "lightly-rusher",
+    "storage_bucket": "lightly-rusher.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27276587687:android:eb817f3732cc43f09a2182",
+        "android_client_info": {
+          "package_name": "com.rusher.lightly"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBKIEMnn4KQ3kKrBoCzbZDMPvQyc296Vs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
