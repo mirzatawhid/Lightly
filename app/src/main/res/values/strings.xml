@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Lightly</string>
+    <string name="title_activity_light_maps">LightMapsActivity</string>
 </resources>
