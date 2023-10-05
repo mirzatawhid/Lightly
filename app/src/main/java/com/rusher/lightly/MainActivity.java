@@ -18,4 +18,14 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this,LightMapActivity.class);
         startActivity(intent);
     }
+
+    public void aboutUs(View view) {
+        Intent intent = new Intent(MainActivity.this,AboutUsActivity.class);
+        startActivity(intent);
+    }
+
+    public void lightSuggestion(View view) {
+        Intent intent = new Intent(MainActivity.this,LightSuggestionActivity.class);
+        startActivity(intent);
+    }
 }
