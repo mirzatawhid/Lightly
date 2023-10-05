@@ -62,4 +62,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    public void uvSuggestion(View view) {
+        Intent intent = new Intent(MainActivity.this,UVSuggestionActivity.class);
+        startActivity(intent);
+    }
 }
