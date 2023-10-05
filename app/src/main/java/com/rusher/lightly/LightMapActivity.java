@@ -31,6 +31,9 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,10 +49,12 @@ import org.osgeo.proj4j.*;
 
 public class LightMapActivity extends AppCompatActivity {
 
+    double lat=23.8103; // Latitude in degrees
+    double lon=90.4125;
+
     FusedLocationProviderClient fusedLocationProviderClient;
     private LocationCallback locationCallback;
-    public double lat; // Latitude in degrees
-    public double lon; // Longitude in degrees
+     // Longitude in degrees
     public static final int REQUEST_CODE = 100;
 
 
@@ -79,6 +84,22 @@ public class LightMapActivity extends AppCompatActivity {
         int row = (int) (((90 - lat) * Math.pow(2, zoom)) / 288);
         int col = (int) (((180 + lon) * Math.pow(2, zoom)) / 288);
 
+        Date currentDate = new Date();
+
+        // Create a Calendar instance and set it to the current date
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+
+        // Subtract one day from the current date
+        calendar.add(Calendar.DAY_OF_YEAR, -3);
+
+        // Get the previous date as a Date object
+        Date previousDate = calendar.getTime();
+
+        // Format the previous date as a string
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String previousDateString = dateFormat.format(previousDate);
+
 
         Log.d("convert", "row: " + row);
         Log.d("convert", "Col: " + col);
@@ -87,9 +108,9 @@ public class LightMapActivity extends AppCompatActivity {
 
         //Retrofit set
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://gibs.earthdata.nasa.gov/wmts/epsg4326/").addConverterFactory(GsonConverterFactory.create()).build();
-        GIBSService services = retrofit.create(GIBSService.class);
+        GIBSService lservices = retrofit.create(GIBSService.class);
 
-        Call<ResponseBody> call = services.getImageData(
+        Call<ResponseBody> call = lservices.getImageData(
                 "WMTS",
                 "GetTile",
                 "1.0.0",
@@ -98,7 +119,7 @@ public class LightMapActivity extends AppCompatActivity {
                 Integer.toString(zoom),
                 Integer.toString(col),
                 Integer.toString(row),
-                "2023-07-09",
+                previousDateString,
                 "default",
                 "image/png"
         );

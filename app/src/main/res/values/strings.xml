@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">Lightly</string>
     <string name="title_activity_light_maps">LightMapsActivity</string>
+    <string name="login">Login</string>
+    <string name="email">Enter your Email</string>
+    <string name="password">Enter the password</string>
+    <string name="click_to_register">New Here? Register</string>
+    <string name="register">Registration Form</string>
+    <string name="username">Enter a Username</string>
+    <string name="country">Enter your Country</string>
+    <string name="age">Enter your Age</string>
+    <string name="city">Enter your City</string>
+    <string name="sleepingtime">Enter your Sleeping Duration(In Hours)</string>
+    <string name="click_to_login">You have an Account? Login</string>
 </resources>
