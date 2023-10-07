@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Rectangle with rounded corners (background) -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FF0000" /> <!-- Fill color of the rectangle -->
+            <corners android:radius="0dp" /> <!-- Set radius to 0 for sharp corners -->
+        </shape>
+    </item>
+
+    <!-- Transparent oval shape on top to create the half-circle effect -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#00FFFFFF" /> <!-- Transparent color -->
+        </shape>
+    </item>
+</layer-list>
