@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +18,7 @@ import android.location.Location;
 import android.location.LocationRequest;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,8 +51,8 @@ import org.osgeo.proj4j.*;
 
 public class LightMapActivity extends AppCompatActivity {
 
-    double lat=23.8103; // Latitude in degrees
-    double lon=90.4125;
+    double lat=-40.730610; // just for reference and testing
+    double lon=-73.935242;
 
     FusedLocationProviderClient fusedLocationProviderClient;
     private LocationCallback locationCallback;
@@ -249,4 +251,19 @@ public class LightMapActivity extends AppCompatActivity {
         }
     }
 
+    public void mapBrightSuggestion(View view) {
+        Intent intent = new Intent(LightMapActivity.this, LightSuggestionActivity.class);
+        startActivity(intent);
+    }
+
+    public void goBack(View view) {
+        Intent intent = new Intent(LightMapActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void userPROFILE(View view) {
+        Intent intent = new Intent(LightMapActivity.this, Profile.class);
+        startActivity(intent);
+
+    }
 }
