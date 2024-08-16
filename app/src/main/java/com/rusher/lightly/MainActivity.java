@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+
     }
 
     public void lightPollution(View view) {
@@ -67,4 +68,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this,UVSuggestionActivity.class);
         startActivity(intent);
     }
+
 }

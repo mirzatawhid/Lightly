@@ -3,7 +3,9 @@ package com.rusher.lightly;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,13 +31,13 @@ public class Profile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        textViewname = findViewById(R.id.your_name);
-        textViewemail = findViewById(R.id.Profile_email);
-        textViewcountry = findViewById(R.id.Profile_country);
-        textViewcity = findViewById(R.id.Profile_city);
-        textViewage = findViewById(R.id.Profile_age);
-        textViewsleepingtime = findViewById(R.id.Profile_sleepintime);
-        progressBar = findViewById(R.id.progressBar);
+        textViewname = findViewById(R.id.tv_name);
+        textViewemail = findViewById(R.id.tv_email);
+        textViewcountry = findViewById(R.id.tv_country);
+        textViewcity = findViewById(R.id.tv_city);
+        textViewage = findViewById(R.id.tv_age);
+        textViewsleepingtime = findViewById(R.id.tv_sleeping_hours);
+
         mAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         userId = mAuth.getCurrentUser().getUid();
@@ -45,13 +47,25 @@ public class Profile extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 textViewname.setText(documentSnapshot.getString("fName"));
                 textViewemail.setText(documentSnapshot.getString("Email"));
-                textViewcountry.setText("Your Country: "+documentSnapshot.getString("CountryName"));
-                textViewcity.setText("Your Local Town: "+documentSnapshot.getString("City"));
-                textViewage.setText("Your Age: "+documentSnapshot.getString("Age"));
-                textViewsleepingtime.setText("Your Sleeping Time(H): "+documentSnapshot.getString("Sleepingtime"));
+                textViewcountry.setText(documentSnapshot.getString("CountryName"));
+                textViewcity.setText(documentSnapshot.getString("City"));
+                textViewage.setText(documentSnapshot.getString("Age"));
+                textViewsleepingtime.setText(documentSnapshot.getString("Sleepingtime"));
 
 
             }
         });
+    }
+
+    public void goToEditProfile(View view) {
+        Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void goToMain(View view) {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

@@ -1,145 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Profile"
-    android:orientation="vertical"
-    android:background="@color/white">
-<!--    <RelativeLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="200dp"-->
-<!--        android:background="#5CC09F">-->
-<!--        <ImageView-->
-<!--            android:layout_width="150dp"-->
-<!--            android:layout_height="150dp"-->
-<!--            android:id="@+id/imageView_Profile_dp"-->
-<!--            android:background="@drawable/no_profile_pic"-->
-<!--            android:layout_centerInParent="true"/>-->
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:id="@+id/TextView_show_welcome"-->
-<!--            android:hint="Lodgin..."-->
-<!--            android:layout_centerInParent="true"-->
-<!--            android:layout_marginTop="5dp"-->
-<!--            android:textAppearance="@style/TextAppearance.AppCompat.Headline"-->
-<!--            android:textColor="@color/white"/>-->
-
-<!--    </RelativeLayout>-->
-
-
-<!--    <RelativeLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_margin="10dp"-->
-<!--        android:background="@color/white"-->
-<!--        android:padding="10dp">-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/ic_profile"-->
-<!--            android:layout_width="20dp"-->
-<!--            android:layout_height="20dp"-->
-<!--            android:background="@drawable/ic_profile" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/your_name"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_alignStart="@+id/ic_profile"-->
-<!--            android:layout_marginStart="40dp"-->
-<!--            android:hint="Loding.."-->
-<!--            android:textSize="15sp" />-->
-
-<!--        <View-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="1dp"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:layout_marginBottom="15dp"-->
-<!--            android:layout_below="@+id/ic_profile"-->
-<!--            />-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/ic_email"-->
-<!--            android:layout_width="20dp"-->
-<!--            android:layout_height="20dp"-->
-<!--            android:layout_marginTop="30dp"-->
-<!--            android:background="@drawable/ic_email" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/Profile_email"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_alignStart="@+id/ic_profile"-->
-<!--            android:layout_marginStart="40dp"-->
-<!--            android:layout_marginTop="30dp"-->
-<!--            android:hint="Loding.."-->
-<!--            android:textSize="15sp" />-->
-<!--        <View-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="1dp"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:layout_below="@+id/Profile_email"/>-->
-<!--        <TextView-->
-<!--            android:id="@+id/Profile_country"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="60dp"-->
-<!--            android:hint="Country!"-->
-<!--            android:textSize="15sp" />-->
-<!--        <View-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="1dp"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:layout_below="@+id/Profile_country"/>-->
-<!--        <TextView-->
-<!--            android:id="@+id/Profile_city"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="90dp"-->
-<!--            android:hint="City!"-->
-<!--            android:textSize="15sp" />-->
-<!--        <View-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="1dp"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:layout_below="@+id/Profile_city"/>-->
-<!--        <TextView-->
-<!--            android:id="@+id/Profile_age"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="120dp"-->
-<!--            android:hint="Age!"-->
-<!--            android:textSize="15sp" />-->
-<!--        <View-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="1dp"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:layout_below="@+id/Profile_age"/>-->
-<!--        <TextView-->
-<!--            android:id="@+id/Profile_sleepintime"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="150dp"-->
-<!--            android:hint="Sleepint Time!"-->
-<!--            android:textSize="15sp" />-->
-
-<!--    </RelativeLayout>-->
-
-<!--    <ProgressBar-->
-<!--        android:id="@+id/progressBar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:visibility="gone"-->
-<!--        />-->
-
+    tools:context=".EditProfileActivity">
 
     <RelativeLayout
         android:id="@+id/rellay1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_view"
+        android:background="@drawable/bg_edit_view"
         android:paddingBottom="20dp">
 
         <RelativeLayout
@@ -165,8 +36,8 @@
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/tv_name"
+        <EditText
+            android:id="@+id/edit_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imgUser"
@@ -175,14 +46,15 @@
             android:fontFamily="sans-serif-light"
             android:text="Example"
             android:textColor="@color/white"
-            android:textSize="32sp" />
+            android:textSize="32sp"
+            android:background="@android:color/transparent"/>
 
 
         <TextView
-            android:id="@+id/tv_email"
+            android:id="@+id/edit_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_name"
+            android:layout_below="@+id/edit_name"
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif"
             android:text="example@gmail.com"
@@ -191,15 +63,15 @@
             android:textSize="14sp" />
 
         <ImageView
+            android:id="@+id/btn_ok"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_setting"
-            android:onClick="goToEditProfile"/>
+            android:src="@drawable/ic_tick" />
 
         <ImageView
             android:layout_width="40dp"
@@ -322,16 +194,17 @@
                     android:layout_height="wrap_content"
                     android:text="City/Area:"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/tv_city"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/edit_city"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
-                    android:text=""
+                    android:text="00"
                     android:textColor="#000000"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:background="@android:color/transparent"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -344,6 +217,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -351,12 +225,13 @@
                     android:layout_height="wrap_content"
                     android:text="Country:"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/tv_country"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/edit_country"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
                     android:fontFamily="sans-serif-light"
                     android:text=""
                     android:textColor="#000000"
@@ -369,7 +244,6 @@
                     android:background="@color/grey" />
 
             </LinearLayout>
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -382,12 +256,13 @@
                     android:layout_height="wrap_content"
                     android:text="Age:"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/tv_age"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/edit_age"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
                     android:fontFamily="sans-serif-light"
                     android:text=""
                     android:textColor="#000000"
@@ -410,14 +285,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sleeping hours:"
+                    android:text="Sleeping Hours:"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/tv_sleeping_hours"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/edit_sleeping_hours"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
                     android:fontFamily="sans-serif-light"
                     android:text=""
                     android:textColor="#000000"
@@ -436,6 +312,4 @@
 
     </RelativeLayout>
 
-
-
-</LinearLayout>
+</RelativeLayout>
