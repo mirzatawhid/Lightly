@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/sat_image"
         android:layout_width="match_parent"
-        android:layout_height="550dp"
+        android:layout_height="500dp"
         android:scaleType="fitXY"
         android:src="@color/black"
         android:visibility="visible"
@@ -19,8 +19,20 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.342"
-        tools:visibility="visible" />
+        app:layout_constraintVertical_bias="0.337"
+        android:contentDescription="Setallite Image"/>
+
+    <ProgressBar
+        android:id="@+id/light_map_progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.47" />
 
     <View
         android:id="@+id/top_view"
