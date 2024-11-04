@@ -38,6 +38,8 @@ import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import org.opencv.android.OpenCVLoader;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,6 +68,13 @@ public class LightMapActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_light_map);
+
+        if(OpenCVLoader.initLocal()){
+            //System.loadLibrary("opencv_java490");
+            Log.d("opencv","Install successful");
+        }else{
+            Log.d("opencv","Install failed");
+        }
 
         //Initialize the elements
         ImageView sat_image = (ImageView) findViewById(R.id.sat_image);
@@ -313,7 +322,7 @@ public class LightMapActivity extends AppCompatActivity {
         int row = latToRow(coordinates[0], zoom);
         int col = lonToCol(coordinates[1], zoom);
         Toast.makeText(this, "Row: "+row+" Col: "+col, Toast.LENGTH_SHORT).show();
-        String previousDateString = getPreviousDateString(3);
+        String previousDateString = getPreviousDateString(5);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://gibs.earthdata.nasa.gov/wmts/epsg4326/")
@@ -339,9 +348,11 @@ public class LightMapActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    InputStream inputStream = null;
+                    ByteArrayOutputStream byteArrayOutputStream = null;
                     try {
-                        InputStream inputStream = response.body().byteStream();
-                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        inputStream = response.body().byteStream();
+                        byteArrayOutputStream = new ByteArrayOutputStream();
                         byte[] buffer = new byte[4096];
                         int bytesRead;
                         while ((bytesRead = inputStream.read(buffer)) != -1) {
@@ -350,8 +361,29 @@ public class LightMapActivity extends AppCompatActivity {
                         byte[] imageBytes = byteArrayOutputStream.toByteArray();
                         Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
 
+                        // Use DIP Operations
+                        DipOperation dipOperation = new DipOperation();
+
+                        // Step 2: Apply Median Filter
+                        bitmap = dipOperation.applyMedianFilter(bitmap, 3);
+
+                        // Step 1: Apply Gamma Correction
+                        bitmap = dipOperation.applyGammaCorrection(bitmap, 0.8);
+
+                        bitmap = dipOperation.applyContrastStretching(bitmap);
+
+                        // Step 3: Apply Unsharp Masking
+                        bitmap = dipOperation.applyUnsharpMask(bitmap);
+
+                        // Step 4: Apply Thresholding
+                        bitmap = dipOperation.applyThreshold(bitmap, 100, false);
+
+                        // Step 5: Apply Dilation
+                        bitmap = dipOperation.applyDilation(bitmap, 3);
+
                         // Update UI: Show image and hide progress bar
-                        satImage.setImageBitmap(bitmap);
+                        satImage.setImageBitmap(bitmap);  // Display the processed image
+
                         double brightnessLevel = calculateBrightness(bitmap);
                         String level = categorizeBrightness(brightnessLevel);
                         textLevel.setText(level);
@@ -363,6 +395,13 @@ public class LightMapActivity extends AppCompatActivity {
                         e.printStackTrace();
                         // Hide progress bar on failure
                         progressBar.setVisibility(View.GONE);
+                    } finally {
+                        try {
+                            if (inputStream != null) inputStream.close();
+                            if (byteArrayOutputStream != null) byteArrayOutputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 } else {
                     // Handle error response, hide progress bar
@@ -375,9 +414,11 @@ public class LightMapActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
                 // Handle failure, hide progress bar
                 progressBar.setVisibility(View.GONE);
+                Log.e("API Call Failure", "Failed to load image", t);
                 t.printStackTrace();
             }
         });
+
     }
 
 
@@ -480,9 +521,9 @@ public class LightMapActivity extends AppCompatActivity {
     }
 
     private String categorizeBrightness(double brightness) {
-        if (brightness < 20) {
+        if (brightness < 5) {
             return "Low";
-        } else if (brightness < 50) {
+        } else if (brightness < 20) {
             return "Medium";
         } else {
             return "High";

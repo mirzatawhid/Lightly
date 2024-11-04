@@ -16,4 +16,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Lightly"
-include(":app")
+include(":app", ":openCVLibrary")
+
+project(":openCVLibrary").projectDir = File(rootDir, "openCVLibrary")

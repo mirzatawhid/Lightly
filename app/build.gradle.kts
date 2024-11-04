@@ -60,4 +60,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
     implementation("com.github.dhaval2404:imagepicker:2.1")
+
+    implementation(project(":openCVLibrary"))
+
 }
