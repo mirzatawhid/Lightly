@@ -62,12 +62,15 @@ public class LightMapActivity extends AppCompatActivity {
 
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    byte[] gen_image_bytes;
 
+    Intent processingIntent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_light_map);
+        processingIntent = new Intent(LightMapActivity.this, DipProcessActivity.class);
 
         if(OpenCVLoader.initLocal()){
             //System.loadLibrary("opencv_java490");
@@ -93,8 +96,7 @@ public class LightMapActivity extends AppCompatActivity {
         if (checkLocationPermission()) {
             // Show the progress bar while fetching location and image
             progressBar.setVisibility(View.VISIBLE);
-
-            double[] coordinates = getCurrentLocation(progressBar, sat_image, textLevel, zoom); // 0-> Latitude ; 1-> Longitude
+            gen_image_bytes = getCurrentLocation(progressBar, sat_image, textLevel, zoom);
 
         } else {
             requestLocationPermission();
@@ -131,7 +133,7 @@ public class LightMapActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
 
                 // Now you can start fetching the location and image
-                double[] coordinates = getCurrentLocation(progressBar, sat_image, textLevel, 7);
+                gen_image_bytes = getCurrentLocation(progressBar, sat_image, textLevel, 7);
             } else {
                 // Permission was denied, hide the progress bar
                 progressBar.setVisibility(View.GONE);
@@ -142,8 +144,9 @@ public class LightMapActivity extends AppCompatActivity {
 
 
     @SuppressLint("MissingPermission")
-    private double[] getCurrentLocation(ProgressBar progressBar, ImageView satImage, TextView textLevel, int zoom) {
+    private byte[] getCurrentLocation(ProgressBar progressBar, ImageView satImage, TextView textLevel, int zoom) {
         double[] coordinates = new double[2];
+        final byte[][] rawImageBytes = new byte[1][1];
 
         if (isGPSEnabled()) {
             LocationServices.getFusedLocationProviderClient(LightMapActivity.this)
@@ -164,7 +167,7 @@ public class LightMapActivity extends AppCompatActivity {
                                 coordinates[1] = longitude;
 
                                 // Fetch image using coordinates
-                                fetchImage(progressBar, satImage, textLevel, coordinates, zoom);
+                                rawImageBytes[0] =fetchImage(progressBar, satImage, textLevel, coordinates, zoom);
 
                                 Toast.makeText(LightMapActivity.this, "Location: " + coordinates[0] + ", " + coordinates[1], Toast.LENGTH_SHORT).show();
                             }
@@ -176,7 +179,7 @@ public class LightMapActivity extends AppCompatActivity {
             getCurrentLocation(progressBar, satImage, textLevel, zoom); // Retry after enabling GPS
         }
 
-        return coordinates;
+        return rawImageBytes[0];
     }
 
 
@@ -318,11 +321,13 @@ public class LightMapActivity extends AppCompatActivity {
     }
 
 
-    private void fetchImage(ProgressBar progressBar, ImageView satImage, TextView textLevel, double[] coordinates, int zoom) {
+    private byte[] fetchImage(ProgressBar progressBar, ImageView satImage, TextView textLevel, double[] coordinates, int zoom) {
         int row = latToRow(coordinates[0], zoom);
         int col = lonToCol(coordinates[1], zoom);
+        final byte[][] rawImageBytes = new byte[1][1];
         Toast.makeText(this, "Row: "+row+" Col: "+col, Toast.LENGTH_SHORT).show();
-        String previousDateString = getPreviousDateString(5);
+        int numOfDays=3;
+        String previousDateString = getPreviousDateString(numOfDays);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://gibs.earthdata.nasa.gov/wmts/epsg4326/")
@@ -360,14 +365,17 @@ public class LightMapActivity extends AppCompatActivity {
                         }
                         byte[] imageBytes = byteArrayOutputStream.toByteArray();
                         Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                        rawImageBytes[0] = imageBytes;
+                        processingIntent.putExtra("image",imageBytes);
+
 
                         // Use DIP Operations
                         DipOperation dipOperation = new DipOperation();
 
-                        // Step 2: Apply Median Filter
+                        // Step 1: Apply Median Filter
                         bitmap = dipOperation.applyMedianFilter(bitmap, 3);
 
-                        // Step 1: Apply Gamma Correction
+                        // Step 2: Apply Gamma Correction
                         bitmap = dipOperation.applyGammaCorrection(bitmap, 0.8);
 
                         bitmap = dipOperation.applyContrastStretching(bitmap);
@@ -419,84 +427,8 @@ public class LightMapActivity extends AppCompatActivity {
             }
         });
 
-    }
+        return rawImageBytes[0];
 
-
-
-    //getting Image(Bitmap) from API calling using retrofit
-    private Bitmap[] getImageFromApi(int row,int col,int zoom,String previousDateString){
-
-        final Bitmap[] generatedImage = new Bitmap[1];
-
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://gibs.earthdata.nasa.gov/wmts/epsg4326/").addConverterFactory(GsonConverterFactory.create()).build();
-        GIBSService lservices = retrofit.create(GIBSService.class);
-
-        Call<ResponseBody> call = lservices.getImageData(
-                "WMTS",
-                "GetTile",
-                "1.0.0",
-                "VIIRS_SNPP_DayNightBand_At_Sensor_Radiance",
-                "500m",
-                Integer.toString(zoom),
-                Integer.toString(col),
-                Integer.toString(row),
-                previousDateString,
-                "default",
-                "image/png"
-        );
-        String requestUrl = call.request().url().toString();
-        Log.d("API Request", "URL: " + requestUrl);
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        // Load the image using Picasso
-                        Log.d("API Request", "URL: suiii" + response.body());
-                        try {
-                            // Convert the response body InputStream to a byte array
-                            InputStream inputStream = response.body().byteStream();
-                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                            byte[] buffer = new byte[4096];
-                            int bytesRead;
-                            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                                byteArrayOutputStream.write(buffer, 0, bytesRead);
-                            }
-                            byte[] imageBytes = byteArrayOutputStream.toByteArray();
-
-                            // Load the byte array into Picasso
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-
-//                            // Load the Bitmap into Picasso and display it in your ImageView
-//                            sat_image.setImageBitmap(bitmap);
-//                            //return level
-//                            double brightnessLevel = calculateBrightness(bitmap);
-//                            String level = categorizeBrightness(brightnessLevel);
-//                            textLevel.setText(level);
-                            generatedImage[0] = bitmap;
-
-                        } catch (IOException e) {
-                            // Handle the exception
-                            e.printStackTrace();
-                        }
-                    } else {
-                        // Handle the case when the response body is null
-                        Log.e("Image Load Error", "Response body is null");
-                    }
-                } else {
-                    // Handle unsuccessful response (e.g., non-200 HTTP status code)
-                    Log.e("Image Load Error", "Response code: " + response.code());
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-        return generatedImage;
     }
 
 
@@ -523,7 +455,7 @@ public class LightMapActivity extends AppCompatActivity {
     private String categorizeBrightness(double brightness) {
         if (brightness < 5) {
             return "Low";
-        } else if (brightness < 20) {
+        } else if (brightness < 15) {
             return "Medium";
         } else {
             return "High";
@@ -545,5 +477,9 @@ public class LightMapActivity extends AppCompatActivity {
         Intent intent = new Intent(LightMapActivity.this, Profile.class);
         startActivity(intent);
 
+    }
+
+    public void showProcessing(View view) {
+        startActivity(processingIntent);
     }
 }

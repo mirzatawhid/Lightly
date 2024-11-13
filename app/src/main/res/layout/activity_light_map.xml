@@ -83,6 +83,7 @@
         android:id="@+id/suggestion_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="#1976D2"
         android:clickable="true"
@@ -92,8 +93,24 @@
         android:paddingRight="32dp"
         android:text="Suggestion"
         android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_level" />
+
+    <Button
+        android:id="@+id/process_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:backgroundTint="#1976D2"
+        android:clickable="true"
+        android:fontFamily="@font/montserrat_semibold"
+        android:onClick="showProcessing"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:text="Process"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_level" />
 
     <TextView
