@@ -2,12 +2,18 @@ package com.rusher.lightly;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -33,6 +39,13 @@ public class UVMapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uvmap);
+
+        if(OpenCVLoader.initLocal()){
+            //System.loadLibrary("opencv_java490");
+            Log.d("opencv","Install successful");
+        }else{
+            Log.d("opencv","Install failed");
+        }
 
         ImageView sat_image = (ImageView) findViewById(R.id.sat_image);
         TextView textLevel = findViewById(R.id.text_level);
@@ -103,10 +116,13 @@ public class UVMapActivity extends AppCompatActivity {
 
                             // Load the Bitmap into Picasso and display it in your ImageView
                             sat_image.setImageBitmap(bitmap);
-                            //return level
-//                            double brightnessLevel = calculateBrightness(bitmap);
-//                            String level = categorizeBrightness(brightnessLevel);
-//                            textLevel.setText(level);
+
+                            // Convert the Bitmap to Mat
+                            Mat matImage = new Mat();
+                            Utils.bitmapToMat(bitmap, matImage);
+                            // Calculate the UV danger level
+                            String level=calculateUVDangerLevel(matImage);
+                            textLevel.setText(level);
 
                         } catch (IOException e) {
                             // Handle the exception
@@ -130,5 +146,62 @@ public class UVMapActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private String calculateUVDangerLevel(Mat image) {
+        int lowUVCount = 0;
+        int moderateUVCount = 0;
+        int highUVCount = 0;
+        int veryHighUVCount = 0;
+        int extremeUVCount = 0;
+
+        for (int y = 0; y < image.rows(); y++) {
+            for (int x = 0; x < image.cols(); x++) {
+                double[] color = image.get(y, x);
+
+                // Assuming color format is BGR
+                double blue = color[0];
+                double green = color[1];
+                double red = color[2];
+
+                // Define thresholds for UV levels based on color intensity
+                if (blue > 200 && green > 200 && red < 100) { // Example threshold for "low UV"
+                    lowUVCount++;
+                } else if (blue > 150 && green > 150 && red < 100) { // "moderate UV"
+                    moderateUVCount++;
+                } else if (blue > 100 && green < 100 && red < 100) { // "high UV"
+                    highUVCount++;
+                } else if (blue > 50 && green < 50 && red < 50) { // "very high UV"
+                    veryHighUVCount++;
+                } else { // "extreme UV"
+                    extremeUVCount++;
+                }
+            }
+        }
+
+        // Determine the overall UV danger level
+        int maxCount = Math.max(Math.max(Math.max(lowUVCount, moderateUVCount), highUVCount), Math.max(veryHighUVCount, extremeUVCount));
+
+        String uvDangerLevel;
+        if (maxCount == extremeUVCount) {
+            uvDangerLevel = "Extreme";
+        } else if (maxCount == veryHighUVCount) {
+            uvDangerLevel = "Very High";
+        } else if (maxCount == highUVCount) {
+            uvDangerLevel = "High";
+        } else if (maxCount == moderateUVCount) {
+            uvDangerLevel = "Moderate";
+        } else {
+            uvDangerLevel = "Low";
+        }
+
+        return uvDangerLevel;
+    }
+
+
+
+    public void mapUVSuggestion(View view) {
+        Intent intent = new Intent(UVMapActivity.this, UVSuggestionActivity.class);
+        startActivity(intent);
     }
 }

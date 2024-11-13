@@ -27,7 +27,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
@@ -80,7 +79,7 @@ public class LightMapActivity extends AppCompatActivity {
         }
 
         //Initialize the elements
-        ImageView sat_image = (ImageView) findViewById(R.id.sat_image);
+        ImageView sat_image = findViewById(R.id.sat_image);
         TextView textLevel = findViewById(R.id.text_level);
         ProgressBar progressBar = findViewById(R.id.light_map_progressBar);
         Log.d("MainActivity", "This is a debug message");
@@ -158,7 +157,7 @@ public class LightMapActivity extends AppCompatActivity {
                             LocationServices.getFusedLocationProviderClient(LightMapActivity.this)
                                     .removeLocationUpdates(this);
 
-                            if (locationResult != null && locationResult.getLocations().size() > 0) {
+                            if (!locationResult.getLocations().isEmpty()) {
                                 int index = locationResult.getLocations().size() - 1;
                                 double latitude = locationResult.getLocations().get(index).getLatitude();
                                 double longitude = locationResult.getLocations().get(index).getLongitude();

@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="130dp">
+            android:layout_marginTop="160dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -235,7 +235,7 @@
     <View
         android:id="@+id/top_view"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="150dp"
         android:background="@drawable/bg_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -261,7 +261,7 @@
         android:text="DIP Operation Process"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="30sp"
+        android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="@+id/top_view"
         app:layout_constraintEnd_toEndOf="@+id/top_view"
         app:layout_constraintStart_toStartOf="parent"
